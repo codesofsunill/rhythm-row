@@ -1,94 +1,112 @@
-# Rhythm Row — Dance Workshop Website (v5)
+# Rhythm Row: Dance Workshop Website (v5)
 
-Dark + Light glass theme, ek accent colour with glow, "Choose your classes" booking, teachers, UPI payment, My Ticket, Google Sheet backend.
+Dark and light glass theme, one accent colour with a glow, "Choose your classes" booking, teacher profiles, UPI payment, My Ticket, and an optional Google Sheet backend.
 
-**Sab kuch `assets/js/config.js` se control hota hai.** `style.css` aur `app.js` ko chhedna nahi hai.
+**Everything is controlled from `assets/js/config.js`.** You never need to edit `style.css` or `app.js`.
 
 ---
 
-## 1. Turant dekhna (demo mode)
+## 1. Preview it (demo mode)
 
-`index.html` double-click karo. `scriptUrl` khali hai, isliye demo mode chalta hai (data sirf us browser mein rehta hai). Poora flow test kar sakte ho: class chuno → details → payment → ticket.
+Double-click `index.html`. `scriptUrl` is empty, so the site runs in demo mode (data stays in that browser only). You can test the whole flow: choose classes, enter details, pay, get a ticket.
 Demo promo code: `WELCOME100`.
 
 ---
 
-## 2. Client ke liye badalna (config.js)
+## 2. Customise for a client (config.js)
 
-| Kya badalna hai | Config mein kahan |
+| What to change | Where in config |
 |---|---|
-| Naam, tagline, hero ki 3 lines, intro | `brand`, `tagline`, `headline`, `intro` |
-| **Accent colour (glow wala)** | `theme.accent` — koi bhi hex, jaise `'#FF5A1F'` (orange), `'#2DD4A0'` (green), `'#4C8DFF'` (blue) |
-| Light theme mein text colour | `theme.accentOnLight` (thoda gehra version) |
-| Default theme | `theme.default` = `'dark'`, `'light'` ya `'system'` |
-| WhatsApp / phone / email / Instagram / YouTube | `contact` |
-| UPI ID aur naam | `payment` |
-| Logo, hero photos, gallery | `images` (files `assets/img/` mein rakho) |
-| Section on/off | `sections` (`teachers: false` karte hi chhup jaata hai) |
-| Teachers | `teachers` (photo, styles, instagram, bio) |
-| Workshops aur unki classes | `workshops` |
-| Reviews, FAQ, "How it works", About | `reviews`, `faqs`, `how`, `about` |
+| Name, tagline, hero lines, intro | `brand`, `tagline`, `headline`, `intro` |
+| **Accent colour (the glow)** | `theme.accent`: any hex, e.g. `'#FF5A1F'` (orange), `'#2DD4A0'` (green), `'#4C8DFF'` (blue) |
+| Accent text colour in light theme | `theme.accentOnLight` (a slightly darker shade) |
+| Default theme | `theme.default`: `'dark'`, `'light'` or `'system'` |
+| WhatsApp, phone, email, Instagram, YouTube | `contact` |
+| UPI ID and name | `payment.upiId`, `payment.upiName` |
+| Your own UPI QR image (optional) | `payment.qrImage`, e.g. `'assets/img/upi-qr.png'` |
+| Logo, hero photos, gallery | `images` (put files in `assets/img/`) |
+| Turn sections on/off | `sections` (e.g. `teachers: false`) |
+| Teachers | `teachers` (photo, styles, Instagram, bio) |
+| Workshops and their classes | `workshops` |
+| Reviews, FAQ, How it works, About | `reviews`, `faqs`, `how`, `about` |
 | Google Analytics | `analyticsId` |
 
-Visitor uppar corner ke button se dark/light badal sakta hai, choice yaad rehti hai.
+Visitors can switch dark/light with the button in the top corner, and their choice is remembered.
 
-### Naya workshop kaise jodna
-`workshops` list mein ek block copy karo:
+### Payment QR
+Leave `qrImage` empty and the site generates a QR for every booking containing your UPI ID, name and the exact total, so the customer never types the amount. Use `qrImage` only if the client wants their own branded static QR (the customer then has to type the amount). Either way, set a real `upiId` and test with ₹1 before going live.
+
+### Adding a workshop
+Copy a block inside `workshops`:
 ```js
-{ id:'w4', teacher:'t2', tag:'Dance Workshop', date:'2026-12-20', city:'Bhubaneswar',
+{ id:'w4', teacher:'t2', tag:'Dance Workshop', date:'2026-12-20', city:'Your City',
   venue:'Hall name, Area', mapLink:'https://maps.google.com/...', groupLink:'https://chat.whatsapp.com/...',
-  bundle:{ min:3, off:150 },            // 3+ classes par Rs 150 off (nahi chahiye to hata do)
+  bundle:{ min:3, off:150 },            // 3+ classes = Rs 150 off (remove if not needed)
   classes:[
     { id:'c10', name:'Song name', time:'1:00 PM', price:950, seats:20 },
     { id:'c11', name:'Song name', time:'4:00 PM', price:950, seats:20 } ] }
 ```
-`id` har jagah alag hona chahiye. Purane workshops (date nikal gayi) apne aap chhup jaate hain.
+Every `id` must be unique. Past workshops (date has passed) hide automatically.
 
 ---
 
-## 3. Google Sheet backend (admin ke liye, sab kuch Sheet se)
+## 3. Google Sheet backend (optional, for managing everything from a Sheet)
 
-Ye sirf tab chahiye jab client khud Sheet se workshops badalna chahe aur seats/booking track ho.
+Use this when the client wants to edit workshops from a spreadsheet and track bookings and seats.
 
-**Part A — ek baar setup (10 minute)**
-1. [sheets.new](https://sheets.new) kholo, naam rakho `Rhythm Row`.
-2. Menu: **Extensions → Apps Script**. Jo code hai sab delete karo, `apps-script/Code.gs` ka poora code paste karo. Upar `BRAND` aur `OWNER_EMAIL` apna daalo. Save (Ctrl+S).
-3. Upar function dropdown mein **setup** chuno → **Run**. Google permission maangega: *Review permissions → apna account → Advanced → Go to project → Allow*. Ab Sheet mein 5 tab ban jaate hain (Teachers, Workshops, Classes, Promo, Registrations) sample data ke saath.
-4. **Deploy → New deployment → type: Web app**. *Execute as: Me*, *Who has access: Anyone*. **Deploy** dabao, jo **Web app URL** mile use copy karo.
-5. `config.js` mein `scriptUrl: 'wo URL'` paste karo. Bas. Ab site Sheet se chalti hai.
+**Part A: one-time setup (about 10 minutes)**
+1. Open [sheets.new](https://sheets.new) and name it `Rhythm Row`.
+2. Go to **Extensions → Apps Script**. Delete the existing code and paste all of `apps-script/Code.gs`. Set `BRAND` and `OWNER_EMAIL` at the top. Save.
+3. In the function dropdown choose **setup** and click **Run**. Google asks for permission: *Review permissions → your account → Advanced → Go to project → Allow*. Five tabs are created with sample data: Teachers, Workshops, Classes, Promo, Registrations.
+4. Click **Deploy → New deployment → Web app**. Set *Execute as: Me* and *Who has access: Anyone*. Click **Deploy** and copy the **Web app URL**.
+5. Paste it into `config.js` as `scriptUrl: 'that URL'`. The site now runs from the Sheet.
 
-> Code.gs baad mein badlo to **Deploy → Manage deployments → Edit → New version** karna padega, warna purana code chalta rahega.
+> If you change `Code.gs` later, use **Deploy → Manage deployments → Edit → New version**, otherwise the old code keeps running.
 
-**Part B — roz ka kaam**
-- **Teachers tab:** ek teacher = ek row. `styles` mein comma se likho: `Bollywood, Hip Hop`.
-- **Workshops tab:** ek workshop = ek row. `teacher` mein teacher ka `id`. `date` format `2026-12-20`. `active` = `no` karo to chhup jaata hai.
-- **Classes tab:** ek class/gaana = ek row. `workshop` mein workshop ka `id`. `seats` khali = unlimited.
-- **Promo tab:** `type` = `flat` (Rs off) ya `percent`.
-- **Registrations tab:** har booking yahan aati hai, Status **Pending**. Apna UPI app kholo, UTR match karo, phir Status ko **Verified** karo. Customer ko turant mail jaati hai aur uske ticket par WhatsApp group link dikhta hai. Galat payment ho to **Rejected** (seat wapas khul jaati hai).
-
-Workshop ke group ka link `Workshops` tab ke `groupLink` column mein daalo. Wo sirf Verified ticket par dikhta hai.
+**Part B: day-to-day use**
+- **Teachers tab:** one teacher per row. In `styles`, separate with commas: `Bollywood, Hip Hop`.
+- **Workshops tab:** one workshop per row. `teacher` is the teacher's `id`. `date` format is `2026-12-20`. Set `active` to `no` to hide it. Put the WhatsApp group link in `groupLink`.
+- **Classes tab:** one class/song per row. `workshop` is the workshop's `id`. Leave `seats` empty for unlimited.
+- **Promo tab:** `type` is `flat` (Rs off) or `percent`.
+- **Registrations tab:** every booking lands here as **Pending**. Open your UPI app, match the UTR, then set Status to **Verified**. The customer gets an email and their ticket shows the WhatsApp group link. Set **Rejected** for a bad payment (the seat is released).
 
 ---
 
-## 4. Live kaise karein (free)
-1. [app.netlify.com/drop](https://app.netlify.com/drop) kholo.
-2. Poora folder (jisme `index.html` hai) drag-drop karo. Link mil jaata hai.
-3. Apna domain jodna ho to Netlify → Domain settings.
+## 4. Put it live
+
+**GitHub Pages (free)**
+1. Create a new public repo on GitHub, e.g. `rhythm-row`.
+2. In the project folder run:
+```
+git init
+git add .
+git commit -m "Rhythm Row v5"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/rhythm-row.git
+git push -u origin main
+```
+3. Repo → **Settings → Pages** → Deploy from a branch → `main` / root → Save. Your link: `https://YOUR_USERNAME.github.io/rhythm-row/`
+
+**Netlify (drag and drop)**
+Open [app.netlify.com/drop](https://app.netlify.com/drop) and drop the whole folder. You get a link instantly. Custom domains are easiest here.
+
+Note: the UPI ID and phone number in `config.js` are visible to anyone on a public repo (they are shown on the site anyway).
 
 ---
 
 ## 5. Honest notes
-- Payment **manual verify** hota hai (UPI se auto-verify ke liye Razorpay jaisa gateway chahiye, wo alag kaam hai).
-- Photos client se lo (teacher + hero). Bina photo ke initial wale placeholder dikhte hain.
-- Ek hi phone number se kai booking ho sakti hain; UTR dobara use nahi ho sakta.
-- Phone par sab kuch test kiya gaya hai (320px se 1366px tak, horizontal scroll nahi).
+- Payment is **verified manually**. Automatic verification needs a payment gateway such as Razorpay, which is a separate piece of work.
+- Get teacher and hero photos from the client. Without photos, initial-letter placeholders are shown.
+- The QR code library loads from a CDN, so it needs internet. If it fails to load, the QR block hides and the "Pay with UPI app" button still works.
+- The same phone number can make multiple bookings. A UTR can never be used twice.
+- Checked on screens from 320px to 1366px with no horizontal scroll.
 
 ## Files
 ```
 index.html
-assets/css/style.css     (design, mat chhedna)
-assets/js/config.js      (YAHI badalna hai)
-assets/js/app.js         (logic, mat chhedna)
-assets/img/              (logo, photos)
+assets/css/style.css     (design, don't edit)
+assets/js/config.js      (EDIT THIS)
+assets/js/app.js         (logic, don't edit)
+assets/img/              (logo, photos, optional QR)
 apps-script/Code.gs      (Google Sheet backend)
 ```
