@@ -25,12 +25,12 @@ window.CONFIG = {
   },
 
   /* ---------- 3. BACKEND (Google Sheet) ---------- */
-  scriptUrl: '',                         // README Part A ke Step 4 se mila link
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbz_U9H-tjqekkGqPXlO_9ZsPQmz7ffJtL4v9jeJGHEat23uTaTa9gJiSn-WyQhHOXEanQ/exec',                         // README Part A ke Step 4 se mila link
 
   /* ---------- 4. CONTACT ---------- */
   contact: {
-    whatsapp: '919999999999',            // country code + number, sirf digits
-    phoneDisplay: '+91 99999 99999',
+    whatsapp: '916371433363',            // country code + number, sirf digits
+    phoneDisplay: '+91 63714 33363',
     email: 'hello@example.com',
     instagram: 'https://instagram.com/your_handle',
     instagramHandle: '@your_handle',
@@ -39,7 +39,7 @@ window.CONFIG = {
 
   /* ---------- 5. PAYMENT ---------- */
   payment: {
-    upiId: 'yourname@upi',
+    upiId: '9040742899@ybl',
     upiName: 'Rhythm Row',
     note: 'All bookings and registrations are strictly non-refundable and non-transferable.'
   },
@@ -72,7 +72,7 @@ window.CONFIG = {
     { id: 'w1', teacher: 't1', tag: 'Dance Workshop', weeksFromNow: 1, city: 'Your City', venue: '[VENUE NAME, AREA]', mapLink: '', groupLink: '',
       bundle: { min: 3, off: 150 },
       classes: [
-        { id: 'c1', name: '[Song one]',   time: '1:00 PM', price: 950, seats: 20 },
+        { id: 'c1', name: '[Song one]',   time: '1:00 PM', price: 1, seats: 20 },
         { id: 'c2', name: '[Song two]',   time: '4:00 PM', price: 950, seats: 20 },
         { id: 'c3', name: '[Song three]', time: '6:00 PM', price: 950, seats: 20 } ] },
     { id: 'w2', teacher: 't2', tag: 'Dance Workshop', weeksFromNow: 2, city: 'Your City', venue: '[VENUE NAME, AREA]', mapLink: '', groupLink: '',
